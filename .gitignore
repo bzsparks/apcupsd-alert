@@ -63,3 +63,6 @@ target/
 
 #pii ignore
 required.json
+
+#sqlite db
+apcupsd.sqlite

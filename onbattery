@@ -1,0 +1,54 @@
+#!/usr/bin/python3
+import smtplib
+import sqlite3
+import json
+from datetime import datetime
+from email.mime.text import MIMEText
+from contextlib import closing
+
+con = None
+now = datetime.now()
+#print(now)
+
+with open('required.json', 'r') as fin:
+    json_required = fin.read()
+    fin.close()
+
+required = json.loads(json_required)
+print(required['sender'])
+print(required['recipients'])
+print(required['password'])
+
+try:
+    con = sqlite3.connect('apcupsd.sqlite')
+    with closing(con.cursor()) as cur:
+        cur.execute('INSERT INTO apcd_onbattery (onbattery) VALUES (\'{0}\')'.format(now))
+        cur.execute('SELECT ID FROM apcd_onbattery WHERE onbattery=\'{0}\''.format(now))
+        lastID = cur.fetchone()[0]
+        cur.execute('UPDATE apcd_last_onbattery SET last_onbattery=(\'{0}\') WHERE rowid=1'.format(lastID))
+    con.commit()
+except sqlite3.Error as e:
+    if con:
+        con.rollback()
+    print('Error {0}:'.format(e.args[0]))
+finally:
+    if con:
+        con.close()
+
+gmailAddress = required['sender']
+gmailPassword = required['password'] #App Specific Password
+
+fromSender = gmailAddress
+toRecipients = required['recipients']
+
+msg_subject = 'ALERT: Home UPS Power Failure'
+msg_text = 'Home is now on battery power. {0}'.format(now)
+
+msg = MIMEText(msg_text)
+msg['Subject'] = msg_subject
+msg['From'] = fromSender
+msg['To'] = ", ".join(toRecipients)
+s = smtplib.SMTP_SSL('smtp.gmail.com', '465')
+s.login(gmailAddress, gmailPassword)
+s.sendmail(fromSender, toRecipients, msg.as_string())
+s.quit()
