@@ -1,0 +1,10 @@
+{
+  "sender": "senderaddress@senderdomain.com",
+  "recipients": [
+    "recipient1@recipientdomain.com",
+    "recipient2@recipientdomain.com",
+    "recipient3@recipientdomain.com",
+    "recipient4@recipientdomain.com"
+  ],
+  "password": "supersecretpassword"
+}
