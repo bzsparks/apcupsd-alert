@@ -11,7 +11,7 @@ table2 = "CREATE TABLE \"apcd_offbattery\" (\"ID\" INTEGER PRIMARY KEY  AUTOINCR
 table3 = "CREATE TABLE \"apcd_onbattery\" (\"ID\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , \"onbattery\" DATETIME)"
 initdata = "INSERT INTO \"apcd_last_onbattery\" (\"last_onbattery\") VALUES (\"1\")"
 
-con = sqlite3.connect('apcupsd.sqlite')
+con = sqlite3.connect("apcupsd.sqlite")
 with closing(con.cursor()) as cur:
     cur.execute(DROP1)
     cur.execute(DROP2)
@@ -20,4 +20,4 @@ with closing(con.cursor()) as cur:
     cur.execute(table2)
     cur.execute(table3)
     cur.execute(initdata)
-con.commit()    
+con.commit()  
