@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import sqlite3
 from contextlib import closing
 
@@ -20,4 +20,4 @@ with closing(con.cursor()) as cur:
     cur.execute(table2)
     cur.execute(table3)
     cur.execute(initdata)
-con.commit()  
+con.commit()
